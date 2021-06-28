@@ -10,7 +10,9 @@ module.exports = {
       },
       name: {type:Sequelize.STRING},
       slug:{type: Sequelize.STRING, unique: true},
-      image: {type: Sequelize.STRING} 
+      image: {type: Sequelize.STRING} ,
+      updatedAt:{type: Sequelize.DATE, allowNull:false},
+      createdAt: {type: Sequelize.DATE, allowNull:false} 
     });
      
   },
