@@ -1,5 +1,5 @@
 const express = require("express");
-const { shopsList, shopAdd, productAdd } = require("../controllers/shops");
+const { shopsList, shopAdd, productAdd, fetchShop } = require("../controllers/shops");
 const upload = require("../middleware/multer");
 
 const router = express.Router();
@@ -24,7 +24,7 @@ router.get("/", shopsList);
 // router.get("/:shopId", shopDetail);
 
 // CREATE SHOP
-router.post("/", upload.single("image"), shopAdd);
+router.post("/new", upload.single("image"), shopAdd);
 
 // CREATE PRODUCT
 router.post("/:shopId/products", upload.single("image"), productAdd);

@@ -1,7 +1,7 @@
 const  express= require("express");
 const upload = require("../middleware/multer");
 //controlers
-const {productData, productDelete, productAdd,productUpdate} = require ("../controllers/products")
+const {productData, productDelete,productUpdate} = require ("../controllers/products")
 
 const router = express.Router()
 
@@ -29,7 +29,7 @@ router.get("/",productData)
 //Delete 
 router.delete(["/:productId"],productDelete);
 // Add
-router.post("/",upload.single("image"),productAdd);
+// router.post("/",upload.single("image"),productAdd);
 //update
 router.put("/:productId",upload.single("image"), productUpdate);
 

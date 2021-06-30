@@ -1,4 +1,4 @@
-const {Shop } = require("../db/models");
+const {Shop,Product } = require("../db/models");
 
 exports.fetchShop = async (shopId, next) => {
     try {
@@ -13,14 +13,14 @@ exports.fetchShop = async (shopId, next) => {
 exports.shopsList = async (req, res, next) => {
     try {
       const shops = await Shop.findAll({ 
-           attributes: ["id", "name"],
+           exclude: ["updatedAt", "createdAt"],
             include: {
               model: Product,
               as: "products",
               attributes: ["id"],
             },
           });
-      
+      console.log("hiiii");
       res.json(shops);
     } catch(error) {
       next(error);
@@ -34,11 +34,10 @@ exports.shopsList = async (req, res, next) => {
           if (req.file) {
             req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
           }
-           req.body.shopId = req.shop.id;
           // console.log(req.body)
-            const productAdd = await Product.create(req.body);
-            console.log(productAdd)
-            res.status(201).json(productAdd);
+            const shopAdd = await Shop.create(req.body);
+            console.log(shopAdd)
+            res.status(201).json(shopAdd);
             
     
           } catch (error) {
@@ -48,24 +47,22 @@ exports.shopsList = async (req, res, next) => {
                  }
     
                 }
-                    //productAdd
-exports.productAdd=async (req,res,next)=>{
-
-    try {
-      if (req.file) {
-        req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
-      }
-       req.body.shopId = req.shop.id;
-      // console.log(req.body)
-        const productAdd = await Product.create(req.body);
-        console.log(productAdd)
-        res.status(201).json(productAdd);
-        
-
-      } catch (error) {
-        // res.status(500).json({ message: error.message || "server error" });
-        next(error);
-
-             }
-
+         //productAdd
+         exports.productAdd=async (req,res,next)=>{
+          try {
+            if (req.file) {
+              req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+            }
+            // console.log(req.body)
+              const shopAdd = await Product.create(req.body);
+              console.log(shopAdd)
+              res.status(201).json(shopAdd);
+              
+      
+            } catch (error) {
+              // res.status(500).json({ message: error.message || "server error" });
+              next(error);
+      
+                   }
+      
             }

@@ -1,7 +1,7 @@
 const  express= require("express");
 const slugify = require("slugify");
 let data = require ("../data");
-const {Product,Shop}= require("../db/models");
+const {Product}= require("../db/models");
 
 // fetchProduct
 exports.fetchProduct = async (productId, next) => {
@@ -42,27 +42,6 @@ exports.productDelete= async (req, res,next) => {
     };
 
 
-    exports.productAdd=async (req,res,next)=>{
-
-      try {
-        if (req.file) {
-          req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
-        }
-         req.body.shopId = req.shop.id;
-        // console.log(req.body)
-          const productAdd = await Product.create(req.body);
-          console.log(productAdd)
-          res.status(201).json(productAdd);
-          
-  
-        } catch (error) {
-          // res.status(500).json({ message: error.message || "server error" });
-          next(error);
-  
-               }
-  
-              }
-              
             //productUpdate
 exports.productUpdate = async (req, res,next) => {
    try {
