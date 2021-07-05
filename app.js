@@ -1,16 +1,24 @@
 const  express= require("express")
 const cors = require('cors');
 const path = require("path");
+const passport =require("passport")
+const { localStrategy} = require("./middleware/passport");
+
 //routes
 let productRouter = require ("./routes/products")
+const userRoutes = require("./routes/users");
 let shopRouter = require("./routes/shops");
 //
 // const db = require("./db/models")
 const app = express();
 app.use(cors())
 const PORT = 8000
+app.use(passport.initialize())
+passport.use(localStrategy);
+
 //methode
-app.use(express.json() );
+app.use(express.json());
+app.use(userRoutes);
 app.use("/products", productRouter)
 app.use("/shops", shopRouter);
 app.use("/media", express.static(path.join(__dirname, "media")));
