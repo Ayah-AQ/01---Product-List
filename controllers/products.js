@@ -28,33 +28,41 @@ exports.productData = async(req,res,next)=>{
       }
 }
 
-//productDelete
-exports.productDelete= async (req, res,next) => {
-    try {
-           await req.product.destroy();
-            res.status(204).end();
-             } catch (error) {
-        // res.status(500).json({message: "server error"});
-        next(error);
+//productUpdate
+exports.productUpdate = async (req, res, next) => {
+  try {
+    const foundShop = await Shop.findByPk(req.product.shopId);
 
-     
-     }
-    };
-
-
-            //productUpdate
-exports.productUpdate = async (req, res,next) => {
-   try {
-    if (req.file) {
-      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    if (req.user.id === foundShop.userId) {
+      if (req.file) {
+        req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+      }
+      await req.product.update(req.body);
+      res.status(200).json(req.product);
+    } else {
+      res
+        .status(401)
+        .json({ message: "You cannot update another shop's products" });
     }
-        await req.product.update(req.body);
-        res.json(req.product);
-
- } catch (error) {
-    // res.status(500).json({ message: error.message });
+  } catch (error) {
     next(error);
-}
-            };
+  }
+};
+//productDelete
 
+exports.productDelete = async (req, res, next) => {
+  try {
+    const foundShop = await Shop.findByPk(req.product.shopId);
 
+    if (req.user.id === foundShop.userId) {
+      await req.product.destroy();
+      res.status(204).end();
+    } else {
+      res
+        .status(401)
+        .json({ message: "You cannot delete another shop's products" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};

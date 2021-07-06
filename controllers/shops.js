@@ -20,7 +20,7 @@ exports.shopsList = async (req, res, next) => {
               attributes: ["id"],
             },
           });
-      console.log("hiiii");
+      // console.log("hiiii");
       res.json(shops);
     } catch(error) {
       next(error);
@@ -30,39 +30,50 @@ exports.shopsList = async (req, res, next) => {
     //shopAdd
     exports.shopAdd=async (req,res,next)=>{
 
-        try {
+      try {
+        const foundShop = await Shop.findOne({
+          where: { userId: req.user.id },
+        });
+        if (foundShop) {
+          res.status(400).json({ message: "You already have a shop" });
+        } else {
           if (req.file) {
             req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
           }
-          // console.log(req.body)
-            const shopAdd = await Shop.create(req.body);
-            console.log(shopAdd)
-            res.status(201).json(shopAdd);
-            
-    
-          } catch (error) {
-            // res.status(500).json({ message: error.message || "server error" });
-            next(error);
-    
-                 }
+          req.body.userId = req.user.id;
+          const newShop = await Shop.create(req.body);
+          res.status(201).json(newShop);
+        }
+      } catch (error) {
+        next(error);
+      }
     
                 }
          //productAdd
-         exports.productAdd=async (req,res,next)=>{
+         exports.productAdd = async (req, res, next) => {
           try {
-            if (req.file) {
-              req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+            if (req.user.id === req.shop.userId) {
+              req.body.shopId = req.shop.id;
+              if (req.file) {
+                req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+              }
+              const newProduct = await Product.create(req.body);
+              res.status(201).json(newProduct);
+            } else {
+              res
+                .status(401)
+                .json({ message: "You cannot add a product to another user's shop" });
             }
-            // console.log(req.body)
-              const shopAdd = await Product.create(req.body);
-              console.log(shopAdd)
-              res.status(201).json(shopAdd);
-              
-      
-            } catch (error) {
-              // res.status(500).json({ message: error.message || "server error" });
-              next(error);
-      
-                   }
-      
-            }
+          } catch (error) {
+            next(error);
+          }
+        };
+        //UPDATE
+        exports.shopUpdate = async (req, res, next) => {
+          if (req.file) {
+            req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+          }
+          const updatedShop = await req.shop.update(req.body);
+          res.status(200).json(updatedShop);
+        };
+         

@@ -9,6 +9,7 @@ const {
     // [...]
     fetchProduct,
   } = require("../controllers/products");
+const passport = require("passport");
 
 router.param("productId", async (req, res, next, productId) => {
   const foundProduct = await fetchProduct(productId, next);
@@ -25,12 +26,14 @@ router.param("productId", async (req, res, next, productId) => {
 
 
 //route path
-router.get("/",productData)
+router.get("/", productData)
 //Delete 
-router.delete(["/:productId"],productDelete);
+router.delete(["/:productId"],  passport.authenticate("jwt", { session: false }),
+productDelete);
 // Add
 // router.post("/",upload.single("image"),productAdd);
 //update
-router.put("/:productId",upload.single("image"), productUpdate);
+router.put("/:productId",  passport.authenticate("jwt", { session: false }),
+upload.single("image"), productUpdate);
 
 module.exports = router

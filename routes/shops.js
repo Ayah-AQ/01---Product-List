@@ -1,5 +1,6 @@
 const express = require("express");
-const { shopsList, shopAdd, productAdd, fetchShop } = require("../controllers/shops");
+const passport = require("passport");
+const { shopsList, shopAdd, productAdd, fetchShop,shopUpdate } = require("../controllers/shops");
 const upload = require("../middleware/multer");
 
 const router = express.Router();
@@ -24,15 +25,17 @@ router.get("/", shopsList);
 // router.get("/:shopId", shopDetail);
 
 // CREATE SHOP
-router.post("/new", upload.single("image"), shopAdd);
+router.post("/new",   passport.authenticate("jwt", { session: false })
+,upload.single("image"), shopAdd);
 
 // CREATE PRODUCT
-router.post("/:shopId/products", upload.single("image"), productAdd);
+router.post("/:shopId/products",   passport.authenticate("jwt", { session: false }),
+upload.single("image"), productAdd);
 
 // DELETE SHOP
-// router.delete("/:shopId", shopDelete);
+// router.delete("/:shopId",passport.authenticate("jwt", { session: false }), shopDelete);
 
 // UPDATE SHOP
-// router.put("/:shopId", upload.single("image"), shopUpdate);
+router.put("/:shopId", upload.single("image"), passport.authenticate("jwt", { session: false }),shopUpdate);
 
 module.exports = router;

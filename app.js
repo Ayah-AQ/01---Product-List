@@ -2,7 +2,7 @@ const  express= require("express")
 const cors = require('cors');
 const path = require("path");
 const passport =require("passport")
-const { localStrategy} = require("./middleware/passport");
+const { localStrategy, jwtStrategy} = require("./middleware/passport");
 
 //routes
 let productRouter = require ("./routes/products")
@@ -15,7 +15,7 @@ app.use(cors())
 const PORT = 8000
 app.use(passport.initialize())
 passport.use(localStrategy);
-
+passport.use(jwtStrategy);
 //methode
 app.use(express.json());
 app.use(userRoutes);
