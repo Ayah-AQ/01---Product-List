@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const { shopsList, shopAdd, productAdd, fetchShop,shopUpdate } = require("../controllers/shops");
+const { shopsList, shopAdd, productAdd, fetchShop,shopUpdate, productUpdate } = require("../controllers/shops");
 const upload = require("../middleware/multer");
 
 const router = express.Router();
@@ -37,5 +37,7 @@ upload.single("image"), productAdd);
 
 // UPDATE SHOP
 router.put("/:shopId", upload.single("image"), passport.authenticate("jwt", { session: false }),shopUpdate);
+
+
 
 module.exports = router;

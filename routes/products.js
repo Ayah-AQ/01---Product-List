@@ -32,8 +32,8 @@ router.delete(["/:productId"],  passport.authenticate("jwt", { session: false })
 productDelete);
 // Add
 // router.post("/",upload.single("image"),productAdd);
-//update
-router.put("/:productId",  passport.authenticate("jwt", { session: false }),
+//updateProduct
+router.put("/:shopId/products/:productId",  passport.authenticate("jwt", { session: false }),
 upload.single("image"), productUpdate);
 
 module.exports = router
